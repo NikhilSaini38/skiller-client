@@ -1,4 +1,4 @@
-{
+export default {
     "success":"#6BBD74",
     "waiting":"#D19C07",
     "failed":"#D55A1E",

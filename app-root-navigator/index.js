@@ -10,5 +10,8 @@ export default createSwitchNavigator(
         "login":Login,
         "splash-screen":SplashScreen,
         ///index
+    },
+    {
+        initialRouteName:"login"
     }
 );
