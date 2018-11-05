@@ -1,44 +1,30 @@
-import React, { Component } from 'react'
-import { Styles, Functions } from '.';
-import { Root, Container, View, Text, Spinner } from 'native-base';
-import Colors from "../colors";
-import * as Animatable from "react-native-animatable";
-import { StatusBar } from 'react-native'
+import React, { Component } from 'react';
+import { StyleSheet } from 'react-native';
+import { View, Text, Container, Spinner } from 'native-base';
+import { Colors } from "..";
+import { createAnimatableComponent } from "react-native-animatable";
 
-var AnimatedContainer = Animatable.createAnimatableComponent(Container);
+let AnimatedContainer = createAnimatableComponent(Container);
 
 export default class componentName extends Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      screenTransition: "fadeIn"
-    }
-  }
-
-
-  componentDidMount() {
-    setTimeout(() => {
-      setTimeout(() => {
-        this.props.navigation.navigate("login");
-      }, 2000);
-    }, 5000);
-  }
-  componentWillUnmount() {
-    this.setState({ screenTransition: "fadeOut" });
-  }
-
   render() {
     return (
-      <AnimatedContainer style={Styles.screen} animation={this.state.screenTransition} duration={500}>
-        <StatusBar
-          backgroundColor="#fff0"
-          translucent={true}
-          barStyle="light-content"
-        />
+      <AnimatedContainer style={Styles.container}>
         <Text style={Styles.title}>SKILLER</Text>
-        <Spinner style={Styles.spinner} color={Colors.success} size={200} ></Spinner>
+        <Spinner color="white" size={64}/>
       </AnimatedContainer>
     )
   }
 }
+
+let Styles = StyleSheet.create({
+  container: {
+    backgroundColor: Colors.primary,
+    alignItems: "center",
+    justifyContent: "space-evenly"
+  },
+  title: {
+    color: 'white',
+    fontSize: 64
+  }
+});

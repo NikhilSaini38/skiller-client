@@ -6,7 +6,7 @@ export default class componentName extends Component {
   render() {
     return (
       <View>
-        <Text> {{kebabCase name}} component </Text>
+        <Text> home component </Text>
       </View>
     )
   }

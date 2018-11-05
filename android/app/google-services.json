@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "150714076391",
+    "firebase_url": "https://skiller-bd8b2.firebaseio.com",
+    "project_id": "skiller-bd8b2",
+    "storage_bucket": "skiller-bd8b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:150714076391:android:51aa81d54b74c4e4",
+        "android_client_info": {
+          "package_name": "com.skiller.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "150714076391-0pibppp16sbmpiomil0kpo3aego5dscc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.skiller.client",
+            "certificate_hash": "adbd4fdfa0c221beb8d83ce49f5ee1e0e3214d2c"
+          }
+        },
+        {
+          "client_id": "150714076391-ugk3c6nul67lvi8qv1b5gttcet7tt9gp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjiOGvzcGJ8LX2KHMMzh8gybIMA_mD0fg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "150714076391-ugk3c6nul67lvi8qv1b5gttcet7tt9gp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

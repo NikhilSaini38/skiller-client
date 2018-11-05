@@ -1,23 +1,28 @@
 import React, { Component } from 'react';
-import { BackHandler } from 'react-native';
+import { StatusBar,BackHandler } from 'react-native';
 import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
 
 //@index(F:.js):import ${variable:pascal} from ${relpath}
+import Home from "./home"
+import { Container } from 'native-base';
+import { Colors } from '..';
 ///index
 
 export {
     //@index(D:/.js):${variable:pascal},
+
     ///index
 }
 
-let {{ pascalCase name }}Navigator = createSwitchNavigator(
+let MainNavigator = createSwitchNavigator(
     {
         //@index(F:/.js):"${variable:kebab}":${variable:pascal},
+        "home":Home,
         ///index
     }
 );
 
-export default class {{ pascalCase name }} extends Component {
+export default class Main extends Component {
     constructor(props) {
         super(props);
         this._didFocusSubscription = props.navigation.addListener('didFocus', payload =>
@@ -41,7 +46,9 @@ export default class {{ pascalCase name }} extends Component {
 
     render(){
         return(
-            <{{pascalCase name}}Navigator></{{pascalCase name}}Navigator>
+            <Container>
+                <MainNavigator></MainNavigator>
+            </Container>
         )
     }
 

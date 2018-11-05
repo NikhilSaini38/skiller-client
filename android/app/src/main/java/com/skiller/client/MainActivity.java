@@ -1,4 +1,4 @@
-package com.skiller_client;
+package com.skiller.client;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "skiller_client";
+        return "skiller";
     }
 }

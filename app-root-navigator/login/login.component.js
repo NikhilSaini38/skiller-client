@@ -1,82 +1,195 @@
 import React, { Component } from "react";
-import { Styles, Functions } from ".";
-import { ImageBackground, StatusBar } from "react-native";
-import { Container, Text, View, Item, Input, Button } from "native-base";
-import colors from "../colors";
-import { createAnimatableComponent } from "react-native-animatable";
+import {
+  StyleSheet,
+  ImageBackground,
+  Keyboard,
+  Alert,
+  BackHandler
+} from "react-native";
+import {
+  View,
+  Text,
+  Container,
+  Item,
+  Input,
+  Button,
+  Spinner,
+  Toast
+} from "native-base";
+import { Colors } from "..";
+import firebase from "react-native-firebase";
 
-var AnimatedContainer = createAnimatableComponent(ImageBackground);
-var AnimatedText = createAnimatableComponent(Text);
-var AnimatedView = createAnimatableComponent(View);
 export default class componentName extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mobileSubmitted: false
+      buttonDisabled: false,
+      phone: ""
     };
-  }
-
-  submitMobile(){
-    this.setState({mobileSubmitted:true})
-  }
-
-  showloginPanel() {
-    return (
-      <AnimatedView style={Styles.loginPanel} animation="fadeInUp" delay={1000}>
-        <Item full rounded style={[Styles.inputItem, Styles.panelItem]}>
-          <Input
-            placeholder="Mobile Number"
-            placeholderTextColor={colors.hint}
-            style={Styles.input}
-          />
-        </Item>
-        <Button full rounded large style={[Styles.button, Styles.panelItem]} onPress={()=>this.submitMobile()}>
-          <Text>Get OTP</Text>
-        </Button>
-      </AnimatedView>
+    this._didFocusSubscription = props.navigation.addListener(
+      "didFocus",
+      payload =>
+        BackHandler.addEventListener(
+          "hardwareBackPress",
+          this.onBackButtonPressAndroid
+        )
     );
   }
-  showOTPPanel() {
-    return (
-      <AnimatedView style={Styles.loginPanel} animation="fadeInUp" delay={1000}>
-        <Item full rounded style={[Styles.inputItem, Styles.panelItem]}>
-          <Input
-            placeholder="One Time Password"
-            placeholderTextColor={colors.hint}
-            style={Styles.input}
-          />
-        </Item>
-        <Button full rounded large style={[Styles.button, Styles.panelItem]}>
-          <Text>Submit OTP</Text>
-        </Button>
-        <Button full rounded large style={[Styles.button, Styles.panelItem]} onPress={()=>this.setState({mobileSubmitted:false})}>
-          <Text>Try another number</Text>
-        </Button>
-      </AnimatedView>
+
+  componentDidMount() {
+    this._willBlurSubscription = this.props.navigation.addListener(
+      "willBlur",
+      payload =>
+        BackHandler.removeEventListener(
+          "hardwareBackPress",
+          this.onBackButtonPressAndroid
+        )
     );
+  }
+
+  onBackButtonPressAndroid = () => {
+    Alert.alert(
+      "Exit Skiller?",
+      undefined,
+      [
+        { text: "Cancel", onPress: () => {}, style: "cancel" },
+        {
+          text: "OK",
+          onPress: () => BackHandler.exitApp(),
+          style: "destructive"
+        }
+      ],
+      { cancelable: true }
+    );
+    return true;
+  };
+
+  componentWillUnmount() {
+    this._didFocusSubscription && this._didFocusSubscription.remove();
+    this._willBlurSubscription && this._willBlurSubscription.remove();
+  }
+  async getOTP() {
+    if (this.state.phone.length > 10 && !this.state.buttonDisabled) {
+      Keyboard.dismiss();
+      this.setState({ buttonDisabled: true });
+      firebase
+        .auth()
+        .signInWithPhoneNumber(this.state.phone, false)
+        .then(
+          () => {
+            Toast.show({
+              text: `OTP sent successfully`,
+              position: "bottom",
+              type: "success",
+              duration: 3000
+            });
+            this.setState({ buttonDisabled: false });
+          },
+          () => {
+            Toast.show({
+              text:
+                "Couldn't log in! Please check your number and try again...",
+              position: "bottom",
+              type: "warning",
+              duration: 3000
+            });
+            this.setState({ buttonDisabled: false });
+          }
+        )
+        .catch(() => {
+          Toast.show({
+            text: "Couldn't log in! Please check your number and try again...",
+            position: "bottom",
+            type: "warning",
+            duration:3000
+          });
+          this.setState({ buttonDisabled: false });
+        });
+      // this.setState({buttonDisabled:false});
+    }
   }
 
   render() {
     return (
-      <Container style={{ backgroundColor: colors.primary }}>
-        <AnimatedContainer
-          animation="fadeIn"
-          source={require("./background.jpg")}
-          style={[Styles.screen]}
-        >
-          <StatusBar
-            backgroundColor="#fff0"
-            translucent={true}
-            barStyle="light-content"
-          />
-          <AnimatedText style={Styles.brand} animation="fadeInUp" delay={500}>
-            SKILLER
-          </AnimatedText>
-          {this.state.mobileSubmitted
-            ? this.showOTPPanel()
-            : this.showloginPanel()}
-        </AnimatedContainer>
-      </Container>
+      <ImageBackground
+        source={require("./coffee.jpg")}
+        resizeMethod="auto"
+        style={Styles.Image}
+      >
+        <Text style={Styles.title}>SKILLER</Text>
+        <View style={Styles.panel}>
+          <Item style={[Styles.panelElement]}>
+            <Input
+              disabled={this.state.buttonDisabled}
+              style={Styles.panelInput}
+              placeholder="Full Mobile Number"
+              placeholderTextColor={Colors.hint}
+              keyboardType="phone-pad"
+              returnKeyType="done"
+              onChangeText={text => {
+                this.setState({ phone: text });
+              }}
+              onSubmitEditing={event => {
+                this.getOTP();
+              }}
+            />
+          </Item>
+          <Button
+            disabled={this.state.buttonDisabled}
+            full
+            medium
+            rounded
+            style={[
+              this.state.buttonDisabled
+                ? Styles.buttonDisabled
+                : Styles.buttonEnabled,
+              Styles.panelElement
+            ]}
+            onPress={() => this.getOTP()}
+          >
+            {this.state.buttonDisabled ? (
+              <Spinner color="white" />
+            ) : (
+              <Text>LOGIN</Text>
+            )}
+          </Button>
+        </View>
+      </ImageBackground>
     );
   }
 }
+
+let Styles = StyleSheet.create({
+  Image: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    padding: 30
+  },
+  panel: {
+    backgroundColor: "#FFFFFFAA",
+    padding: 10,
+    borderRadius: 30,
+    alignItems: "center"
+  },
+  title: {
+    color: "white",
+    fontSize: 64
+  },
+  panelElement: {
+    margin: 10
+  },
+  panelInput: {
+    borderRadius: 30,
+    borderColor: Colors["accent-dark"],
+    borderWidth: 1,
+    borderStyle: "solid",
+    textAlign: "center"
+  },
+  buttonEnabled: {
+    backgroundColor: Colors.primary
+  },
+  buttonDisabled: {
+    backgroundColor: "grey"
+  }
+});

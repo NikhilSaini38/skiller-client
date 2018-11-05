@@ -3,23 +3,29 @@ import { BackHandler } from 'react-native';
 import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
 
 //@index(F:.js):import ${variable:pascal} from ${relpath}
+import Slides from "./slides"
+import { Toast } from 'native-base';
 ///index
 
 export {
     //@index(D:/.js):${variable:pascal},
+
     ///index
 }
 
-let {{ pascalCase name }}Navigator = createSwitchNavigator(
+let OnBoardingNavigator = createSwitchNavigator(
     {
         //@index(F:/.js):"${variable:kebab}":${variable:pascal},
+        "slides":Slides,
         ///index
     }
 );
 
-export default class {{ pascalCase name }} extends Component {
+export default class OnBoarding extends Component {
+
     constructor(props) {
         super(props);
+        this.state={appExiting:false};
         this._didFocusSubscription = props.navigation.addListener('didFocus', payload =>
             BackHandler.addEventListener('hardwareBackPress', this.onBackButtonPressAndroid)
         );
@@ -32,6 +38,20 @@ export default class {{ pascalCase name }} extends Component {
     }
 
     onBackButtonPressAndroid = () => {
+        if(this.state.appExiting){
+            BackHandler.exitApp();
+        }else{
+            this.setState({appExiting:true});
+            Toast.show({
+                text:'Press back again to exit the App...',
+                type:'danger',
+                duration:3000
+            });
+            setTimeout(() => {
+                this.setState({appExiting:false});
+            }, 3000);
+        }
+        return true;
     };
 
     componentWillUnmount() {
@@ -41,7 +61,7 @@ export default class {{ pascalCase name }} extends Component {
 
     render(){
         return(
-            <{{pascalCase name}}Navigator></{{pascalCase name}}Navigator>
+            <OnBoardingNavigator></OnBoardingNavigator>
         )
     }
 
