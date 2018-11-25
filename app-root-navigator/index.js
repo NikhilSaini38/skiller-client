@@ -6,7 +6,7 @@ import {
     NavigationActions
 } from "react-navigation";
 import firebase from "react-native-firebase";
-import { View, Container, Root } from "native-base";
+import { View, Root } from "native-base";
 
 //@index(F:.js):import ${variable:pascal} from ${relpath}
 import Colors from "./colors"
@@ -44,14 +44,16 @@ export default class AppRoot extends Component {
                 params
             })
         );
-    }
-
+    };
     componentDidMount() {
         firebase.auth().onAuthStateChanged(
             async user => {
                 if (user) {
-                    let onboarding = await firebase.firestore().doc(`users/${user.uid}`).get();
-                    onboarding.data().onboarding == true ? this.navigate('on-boarding-navigator') : this.navigate('main-navigator')
+                    let onboarding = await firebase.firestore().doc(`clients/${user.uid}`).onSnapshot(
+                        snap=>{
+                            this.navigate(snap.data().onboarding?'on-boarding-navigator':'main-navigator');
+                        }
+                    );                    
                 } else {
                     this.navigate('login');
                 }

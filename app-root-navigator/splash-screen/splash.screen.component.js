@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 import { View, Text, Container, Spinner } from 'native-base';
-import { Colors } from "..";
 import { createAnimatableComponent } from "react-native-animatable";
+import Colors from '../colors'
 
 let AnimatedContainer = createAnimatableComponent(Container);
 

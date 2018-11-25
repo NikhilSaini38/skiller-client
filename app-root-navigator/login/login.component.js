@@ -16,8 +16,8 @@ import {
   Spinner,
   Toast
 } from "native-base";
-import { Colors } from "..";
 import firebase from "react-native-firebase";
+import Colors from "../colors";
 
 export default class componentName extends Component {
   constructor(props) {

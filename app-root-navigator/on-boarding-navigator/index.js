@@ -3,21 +3,28 @@ import { BackHandler } from 'react-native';
 import { createSwitchNavigator, createStackNavigator } from 'react-navigation';
 
 //@index(F:.js):import ${variable:pascal} from ${relpath}
+import AddAddress from "./add-address"
+import AddCard from "./add-card"
+import AddInformation from "./add-information"
 import Slides from "./slides"
-import { Toast } from 'native-base';
 ///index
 
 export {
     //@index(D:/.js):${variable:pascal},
-
     ///index
 }
 
 let OnBoardingNavigator = createSwitchNavigator(
     {
         //@index(F:/.js):"${variable:kebab}":${variable:pascal},
+        "add-address":AddAddress,
+        "add-card":AddCard,
+        "add-information":AddInformation,
         "slides":Slides,
         ///index
+    },
+    {
+        initialRouteName:'add-card'
     }
 );
 
